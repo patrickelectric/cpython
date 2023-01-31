@@ -767,12 +767,18 @@ class Path(PurePath):
             other_st = self.__class__(other_path).stat()
         return self._flavour.samestat(st, other_st)
 
-    def iterdir(self):
+    def iterdir(self, check_dir=False):
         """Yield path objects of the directory contents.
 
         The children are yielded in arbitrary order, and the
         special entries '.' and '..' are not included.
+
+        check_dir can be used to return an empty iterator if
+        the path does not exist.
         """
+        if not self.is_dir():
+            return
+
         for name in os.listdir(self):
             yield self._make_child_relpath(name)
 
